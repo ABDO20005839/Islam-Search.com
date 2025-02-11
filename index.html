@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <!-- وسم meta لجعل الموقع متجاوبًا مع الهواتف المحمولة -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع البحث الإسلامي – خيارات متقدمة</title>
+  <!-- تضمين خط من Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Cairo:400,600&display=swap" rel="stylesheet">
+  <style>
+    /* إعدادات عامة وتنسيق خلفية الموقع */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      direction: rtl;
+      color: #fff;
+    }
+    /* تصميم الحاوية الرئيسية (Glassmorphism) */
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px 40px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      width: 90%;
+      max-width: 700px;
+      animation: fadeIn 1s ease-in-out;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    /* زر تفعيل الخيارات المتقدمة */
+    .advanced-toggle {
+      display: block;
+      margin: 0 auto 20px;
+      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .advanced-toggle:hover {
+      transform: scale(1.05);
+    }
+    /* لوحة الخيارات المتقدمة */
+    .advanced-options {
+      display: none;
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+    .advanced-options label {
+      margin: 0 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+    /* تصميم التبديل (Toggle Switch) الخاص بالاختيارات */
+    .custom-checkbox {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    .custom-checkbox input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .custom-checkbox input:checked + .slider {
+      background-color: #008CBA;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    .custom-checkbox input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    /* تصميم صندوق البحث */
+    .search-box {
+      display: flex;
+      align-items: center;
+      border: 2px solid rgba(255,255,255,0.7);
+      border-radius: 25px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      margin-bottom: 30px;
+    }
+    .search-box:focus-within {
+      border-color: #fff;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+    .search-box input[type="text"] {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      outline: none;
+      font-size: 1.1rem;
+      background: transparent;
+      color: #fff;
+    }
+    .search-box button {
+      background: linear-gradient(45deg, #ff8c00, #e52e71);
+      border: none;
+      padding: 12px 20px;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .search-box button:hover {
+      transform: scale(1.05);
+    }
+    /* منطقة عرض النتائج مع حركة fadeInUp */
+    .result {
+      margin-top: 20px;
+      animation: fadeInUp 0.5s ease-in-out;
+    }
+    /* تنسيق الأقسام */
+    .section {
+      margin-bottom: 30px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .section h2 {
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+      border-bottom: 2px solid rgba(255,255,255,0.7);
+      padding-bottom: 5px;
+    }
+    /* زر التبديل داخل الأقسام */
+    .toggle-btn {
+      background: linear-gradient(45deg, #008CBA, #00b4db);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-bottom: 10px;
+    }
+    .toggle-btn:hover {
+      transform: scale(1.05);
+    }
+    /* المحتوى المخفي */
+    .content {
+      display: none;
+      animation: fadeIn 0.6s forwards;
+    }
+    .content p {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    /* الأنيميشن */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* التجاوب مع الشاشات الصغيرة */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        max-width: 95%;
+      }
+      h1 { font-size: 2rem; }
+      .advanced-toggle { font-size: 0.9rem; padding: 8px 12px; }
+      .advanced-options label { font-size: 0.9rem; margin: 0 5px; }
+      .search-box input[type="text"] {
+        font-size: 1rem;
+        padding: 10px 16px;
+      }
+      .search-box button {
+        font-size: 1rem;
+        padding: 10px 16px;
+      }
+      .section h2 { font-size: 1.6rem; }
+      .toggle-btn { font-size: 0.9rem; padding: 8px 10px; }
+      .custom-checkbox { width: 35px; height: 18px; }
+      .custom-checkbox .slider:before { height: 14px; width: 14px; left: 2px; bottom: 2px; }
+      .custom-checkbox input:checked + .slider:before { transform: translateX(17px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>موقع البحث الإسلامي</h1>
+    <!-- زر لتفعيل الخيارات المتقدمة -->
+    <button class="advanced-toggle" id="advancedToggle">خيارات متقدمة</button>
+    <!-- لوحة الخيارات المتقدمة -->
+    <div class="advanced-options" id="advancedOptions">
+      <label>
+        <span class="custom-checkbox">
+          <input type="checkbox" name="category" value="hadiths" checked>
+          <span class="slider"></span>
+        </span>
+        الأحاديث النبوية
+      </label>
+      <label>
+        <span class="custom-checkbox">
+          <input type="checkbox" name="category" value="verses" checked>
+          <span class="slider"></span>
+        </span>
+        الآيات القرآنية
+      </label>
+      <label>
+        <span class="custom-checkbox">
+          <input type="checkbox" name="category" value="tips" checked>
+          <span class="slider"></span>
+        </span>
+        النصائح
+      </label>
+      <label>
+        <span class="custom-checkbox">
+          <input type="checkbox" name="category" value="repentance" checked>
+          <span class="slider"></span>
+        </span>
+        حكم التوبة
+      </label>
+    </div>
+    <!-- صندوق البحث -->
+    <div class="search-box">
+      <input type="text" id="searchQuery" placeholder="أدخل موضوع البحث هنا...">
+      <button onclick="search()">بحث</button>
+    </div>
+    <!-- منطقة عرض النتائج -->
+    <div id="results" class="result"></div>
+  </div>
+
+  <script>
+    // تشغيل زر الخيارات المتقدمة
+    document.getElementById("advancedToggle").addEventListener("click", function() {
+      const adv = document.getElementById("advancedOptions");
+      if (adv.style.display === "none" || adv.style.display === "") {
+        adv.style.display = "block";
+        this.textContent = "إخفاء الخيارات المتقدمة";
+      } else {
+        adv.style.display = "none";
+        this.textContent = "خيارات متقدمة";
+      }
+    });
+
+    /* البيانات المدمجة: تشمل سجائر/خمر، عنصرية، وعقوق الوالدين */
+    const hadiths = [
+      {
+        keywords: ["سجائر", "تدخين", "شرب السجائر"],
+        text: "عن ابن عمر رضي الله عنهما قال: «من بدأ في التدخين فقد وقع في الحرام...»",
+        status: "حرام"
+      },
+      {
+        keywords: ["خمر", "شرب الخمر", "كحول"],
+        text: "عن أبي هريرة رضي الله عنه أن رسول الله صلى الله عليه وسلم قال: «كل مسكر خمر»",
+        status: "حرام"
+      },
+      {
+        keywords: ["عنصرية", "تمييز", "تفريق","تعنصر","الفرق","العنصريه"],
+        text: "قال رسول الله صلى الله عليه وسلم: \"لا فضل لعربي على أعجمي إلا بالتقوى\".",
+        status: "مؤكد"
+      },
+      {
+        keywords: ["عقوق", "عصيان", "عقوق الوالدين", "عصيان الوالدين","عصي","اساء","اسائه","اسائة"],
+        text: "قال النبي صلى الله عليه وسلم: \"رضا الرب في رضا الوالدين، وسخط الرب في سخط الوالدين\".",
+        status: "حرام"
+      },
+      {
+      keywords: ["الغيبه والنميمه","الغيبة والنميمة","جبت سيرة","تحدثت علي","اتكلمت علي","اتكلمت عن","تحدثت عن","تكلمت علي","تكلمت عن"],
+        text: "قال النبي صلى الله عليه وسلم: \"قيل ما الغيبة يا رسول الله؟ فقال: ذكرك أخاك بما يكره، قيل: أفرأيت إن كان في أخي ما أقول؟ قال: إن كان فيه ما تقول فقد اغتبته، وإن لم يكن فيه فقد بهته (رواه مسلم).\".",
+        status: "حرام"
+      }
+    ];
+    // البيانات القرانيه 
+    const verses = [
+      {
+        keywords: ["سجائر", "تدخين"],
+        text: "قال الله تعالى: {ولا تقربوا المحرمات} [البقرة: 187]."
+      },
+      {
+        keywords: ["خمر", "كحول"],
+        text: "يا أيها الذين آمنوا إنما الخمر والميسر والأنصاب رجس من عمل الشيطان فاجتنبوه لعلكم تفلحون. [المائدة: 90]"
+      },
+      {
+        keywords: ["عنصرية", "تمييز", "تفريق","تعنصر","الفرق","العنصريه"],
+        text: "يقول الله تعالى: {يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُم مِّن ذَكَرٍ وَأُنثَىٰ وَجَعَلْنَاكُمْ شُعُوبًا وَقَبَائِلَ لِتَعَارَفُوا} [الحجرات: 13]."
+      },
+      {
+        keywords: ["عقوق", "عصيان", "عقوق الوالدين", "عصيان الوالدين","عصي","اساء","اسائه","اسائة"],
+        text: "وقال الله تعالى: {وَقَضَى رَبُّكَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ وَبِالْوَالِدَيْنِ إِحْسَانًا} [الإسراء: 23]."
+      },
+      {
+      keywords: ["الغيبه والنميمه","الغيبة والنميمة","جبت سيرة","تحدثت علي","اتكلمت علي","اتكلمت عن","تحدثت عن","تكلمت علي","تكلمت عن"],
+        text: "وَلا يَغْتَبْ بَعْضُكُمْ بَعْضاً أَيُحِبُّ أَحَدُكُمْ أَنْ يَأْكُلَ لَحْمَ أَخِيهِ مَيْتاً فَكَرِهْتُمُوهُ وَاتَّقُوا اللَّهَ إِنَّ اللَّهَ تَوَّابٌ رَحِيمٌ [الحجرات:12]."
+      }
+    ];
+    // البيانات حول النصائح 
+    const tips = [
+      {
+        keywords: ["سجائر", "تدخين", "شرب السجائر"],
+        text: "ننصح بالتوقف عن التدخين واتباع نمط حياة صحي؛ استعن بالأهل والأصدقاء والدعاء إلى الله للإقلاع عن هذه العادة الضارة."
+      },
+      {
+        keywords: ["خمر", "شرب الخمر", "كحول"],
+        text: "ننصح بالابتعاد عن شرب الخمر والمسكرات؛ فهي تؤدي إلى تدهور الصحة والعقل وتسبب مشاكل اجتماعية كثيرة."
+      },
+      {
+        keywords: ["عنصرية", "تمييز", "تفريق","تعنصر","الفرق","العنصريه"],
+        text: "اعمل على تعزيز روح الأخوة والمساواة بين الناس وابتعد عن كل أشكال التمييز العنصري."
+      },
+      {
+        keywords: ["عقوق", "عصيان", "عقوق الوالدين", "عصيان الوالدين","عصي","اساء","اسائه","اسائة"],
+        text: "احرص على طاعة والديك والإحسان إليهما، وكن سنداً وداعماً لهما كما أمر الله ورسوله."
+      },
+      {
+      keywords: ["الغيبه والنميمه","الغيبة والنميمة","جبت سيرة","تحدثت علي","اتكلمت علي","اتكلمت عن","تحدثت عن","تكلمت علي","تكلمت عن"],
+        text: "عليك ان تذكر اخيك بلخير ولا تسبه اثناء غيابه وحاول ان تتجنب مخاطر الغيبه والنميمه لان ٲحياً يقع الشخص في هذا الذنب بدون قصد حيث عندما يفعل الشخص الذنب يتم اخذ ٳما حسناته كلها واعطائها الي الشخص الذي حدث عليه الغيبه والنميمه او يتم اخذ سيئات الشخص الذي حدث عليه الغيبه والنميمه واعطائها للذي فعل الذنب فحاول ان تتجنبها ."
+      }
+    ];
+    // البيانات حكم التوبه 
+    const repentanceTips = [
+      {
+        keywords: ["خمر", "شرب الخمر", "كحول", "توبة"],
+        text: `إذا وقع الإنسان في ذنب شرب الخمر، فلابد منه من التوبة النصوحة التي تقبلها الله، وتتضمن:
+1. **الإقلاع الفوري:** ترك شرب الخمر دون تأجيل.
+2. **الندم على الذنب:** الشعور الصادق بالندم والأسف لما فات.
+3. **العزم على عدم العودة:** اتخاذ قرار قاطع بعدم العودة إلى هذه المعصية.
+4. **الاستغفار والدعاء:** التضرع إلى الله بطلب المغفرة والرحمة.
+5. **الإصلاح والتعويض:** إن أمكن، إصلاح الأضرار التي نتجت عن الذنب.
+قال الله تعالى: {وَمَن يَعْمَلْ سُوءاً أَوْ يَظْلِمْ نَفْسَهُ ثُمَّ يَسْتَغْفِرِ اللَّهَ يَجِدِ اللَّهَ غَفُورًا رَحِيمًا} [النساء: 110].`
+      },
+      {
+        keywords: ["عنصرية", "تمييز", "تفريق","تعنصر","الفرق","العنصريه"],
+        text: "إذا أظهرت عنصرية، فاستغفر الله وتب إليه بصدق، واعمل على تغيير سلوكك وتصحيح موقفك تجاه الآخرين."
+      },
+      {
+        keywords: ["عقوق", "عصيان", "عقوق الوالدين", "عصيان الوالدين","عصي","اساء","اسائه","اسائة"],
+        text: "إذا أسأت إلى والديك، فاستغفر الله وتب إليه بصدق واطلب رضاهما، واعمل على تصحيح سلوكك والتعويض عما فات."
+      },
+      {
+      keywords: ["الغيبه والنميمه","الغيبة والنميمة","جبت سيرة","تحدثت علي","اتكلمت علي","اتكلمت عن","تحدثت عن","تكلمت علي","تكلمت عن"],
+        text: "اولا : عليك ان تستغفر لاخيك الذي ذكرت فيه عيب امام شخص ما او امام نفسك استغفر له بكثرة  ثانيا :  ام ان تخبر اخيك الذي ذكرت فيه العيب بانك تحدثت عنه اثناء غيابه فهو إمّا يسامحك او لأ فادعوا له حتي لو لم يسامحك عسي ان يغفر لك الله انه الغفور الرحيم (انشاء الله ربنا يغفر لك) . "
+      }
+    ];
+
+    // دالة إنشاء الأقسام؛ toggle=true تعني استخدام زر التبديل، وtoggle=false تعني عرض المحتوى دائمًا
+    function createSection(title, items, toggle = true) {
+      let section = document.createElement("div");
+      section.classList.add("section");
+
+      let header = document.createElement("h2");
+      header.textContent = title;
+      section.appendChild(header);
+
+      if (toggle) {
+        let toggleBtn = document.createElement("button");
+        toggleBtn.textContent = "عرض " + title;
+        toggleBtn.classList.add("toggle-btn");
+        section.appendChild(toggleBtn);
+
+        let content = document.createElement("div");
+        content.classList.add("content");
+        content.style.display = "none";
+
+        items.forEach((item, index) => {
+          let p = document.createElement("p");
+          p.style.animationDelay = (index * 0.2) + "s";
+          p.innerHTML = item.status ? `<strong>الحكم:</strong> ${item.status}<br>${item.text}` : item.text;
+          content.appendChild(p);
+        });
+        section.appendChild(content);
+
+        toggleBtn.addEventListener("click", function() {
+          if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            toggleBtn.textContent = "إخفاء " + title;
+          } else {
+            content.style.display = "none";
+            toggleBtn.textContent = "عرض " + title;
+          }
+        });
+      } else {
+        let content = document.createElement("div");
+        content.classList.add("content");
+        content.style.display = "block";
+        items.forEach((item, index) => {
+          let p = document.createElement("p");
+          p.style.animationDelay = (index * 0.2) + "s";
+          p.innerHTML = item.status ? `<strong>الحكم:</strong> ${item.status}<br>${item.text}` : item.text;
+          content.appendChild(p);
+        });
+        section.appendChild(content);
+      }
+      return section;
+    }
+
+    // دالة البحث وتصفية البيانات وعرض النتائج مع إعادة تفعيل الأنيميشن
+    function search() {
+      let query = document.getElementById("searchQuery").value.toLowerCase();
+      let resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+
+      // إعادة تعيين الأنيميشن لمنطقة النتائج
+      resultsDiv.style.animation = "none";
+      void resultsDiv.offsetWidth;
+      resultsDiv.style.animation = "fadeInUp 0.5s ease-in-out";
+
+      // الحصول على الفئات المختارة من خيارات البحث المتقدمة
+      let checkedBoxes = document.querySelectorAll('input[name="category"]:checked');
+      let selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
+
+      // تصفية البيانات لكل فئة
+      let matchingHadiths = selectedCategories.includes("hadiths")
+        ? hadiths.filter(item => item.keywords.some(keyword => query.includes(keyword.toLowerCase())))
+        : [];
+      let matchingVerses = selectedCategories.includes("verses")
+        ? verses.filter(item => item.keywords.some(keyword => query.includes(keyword.toLowerCase())))
+        : [];
+      let matchingTips = selectedCategories.includes("tips")
+        ? tips.filter(item => item.keywords.some(keyword => query.includes(keyword.toLowerCase())))
+        : [];
+      let matchingRepentance = selectedCategories.includes("repentance")
+        ? repentanceTips.filter(item => item.keywords.some(keyword => query.includes(keyword.toLowerCase())))
+        : [];
+
+      // إذا لم توجد نتائج مطابقة في الفئات المختارة
+      if (
+        matchingHadiths.length === 0 &&
+        matchingVerses.length === 0 &&
+        matchingTips.length === 0 &&
+        matchingRepentance.length === 0
+      ) {
+        let p = document.createElement("p");
+        p.innerHTML = "لم يتم العثور على نتائج مطابقة.";
+        p.style.animationDelay = "0.2s";
+        resultsDiv.appendChild(p);
+        return;
+      }
+
+      // عرض النتائج وفقًا للفئات المختارة
+      if (selectedCategories.includes("hadiths") && matchingHadiths.length > 0) {
+        resultsDiv.appendChild(createSection("الأحاديث النبوية", matchingHadiths, false));
+      }
+      if (selectedCategories.includes("verses") && matchingVerses.length > 0) {
+        resultsDiv.appendChild(createSection("الآيات القرآنية", matchingVerses, false));
+      }
+      if (selectedCategories.includes("tips") && matchingTips.length > 0) {
+        resultsDiv.appendChild(createSection("النصائح", matchingTips));
+      }
+      if (selectedCategories.includes("repentance") && matchingRepentance.length > 0) {
+        resultsDiv.appendChild(createSection("حكم التوبة", matchingRepentance));
+      }
+    }
+
+    // تشغيل البحث عند الضغط على زر "بحث" أو عند الضغط على مفتاح "Enter" في خانة البحث
+    document.getElementById("searchQuery").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        search();
+      }
+    });
+  </script>
+</body>
+</html>
